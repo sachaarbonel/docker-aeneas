@@ -1,15 +1,10 @@
-FROM buildpack-deps:sid
-
-RUN set -x \
-      && apt-get update \
-      && apt-get install -y espeak ffmpeg libsndfile1 libsndfile1-dev python python-dev python-pip python-numpy python-lxml python-beautifulsoup \
-      && rm -rf /var/lib/apt/lists/*
+FROM python:2.7-slim-buster
+ADD install_dependencies.sh install_dependencies.sh
+RUN bash install_dependencies.sh
 RUN mkdir -p /usr/src/app
 
 WORKDIR /usr/src/app
-RUN git clone https://github.com/readbeyond/aeneas.git
 
-COPY requirements.txt /usr/src/app/
-RUN pip install -r requirements.txt
+RUN pip install beautifulsoup4 && pip install lxml &&  pip install numpy && pip install aeneas
 
 CMD [ "python" ]
